@@ -17,6 +17,9 @@ module.exports = {
   },
   plugins: ['react'],
   rules: {
-    'space-in-parens': ['error', 'never']
+    'space-before-function-paren': ['error', 'always'],
+    prettier: {
+      'space-before-function-paren': ['error', 'always']
+    }
   }
 }
