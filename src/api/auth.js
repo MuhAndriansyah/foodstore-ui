@@ -20,6 +20,6 @@ export async function logout() {
     })
     .then((response) => {
       localStorage.removeItem('auth')
-      console.log(response)
+      console.log('Gabut', response)
     })
 }

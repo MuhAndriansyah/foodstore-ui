@@ -1,7 +1,7 @@
 import store from './store'
 
 let currentAuth
-
+console.log('Listener', currentAuth)
 function listener() {
   const previousAuth = currentAuth
   currentAuth = store.getState().auth
@@ -12,7 +12,7 @@ function listener() {
 }
 
 function listen() {
-  // dengarkarn perubahan stote
+  // dengarkarn perubahan state
   // fungsi store.subscribe untuk mendaftarkan fungsi listener
   store.subscribe(listener)
 }
