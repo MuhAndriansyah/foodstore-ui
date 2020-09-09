@@ -1,7 +1,7 @@
 import React from 'react'
 import { SideNav, LayoutSidebar } from 'upkit'
 import menus from './menus'
-
+import TopBar from '../../components/TopBar'
 const Home = () => {
   return (
     <div>
@@ -10,7 +10,7 @@ const Home = () => {
         content={
           <div className="md:flex w-full mr-5 h-full min-hscreen">
             <div className="w-full md:w-3/4 pl-5 pb-10">
-              Konten utama di sini
+              <TopBar />
             </div>
             <div
               className="w-full md:w-1/4 h-full shadow-lg border-r

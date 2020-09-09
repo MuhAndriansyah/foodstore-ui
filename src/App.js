@@ -6,6 +6,9 @@ import Home from './pages/Home'
 import { Provider } from 'react-redux'
 import store from './app/store'
 import { listen } from './app/listener'
+import Register from './pages/Register'
+import Login from './pages/Login'
+import RegisterSuccess from './pages/RegisterSuccess'
 
 function App() {
   useEffect(() => {
@@ -16,6 +19,10 @@ function App() {
     <Provider store={store}>
       <Router>
         <Switch>
+        <Route path="/login" component={Login} />
+          <Route path="/register" exact component={Register} />
+          <Route path="/register/berhasil" component={RegisterSuccess} />
+
           <Route path="/" exact component={Home} />
         </Switch>
       </Router>
