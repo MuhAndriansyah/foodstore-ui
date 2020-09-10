@@ -54,9 +54,7 @@ export const fetchProducts = () => {
     }
 
     try {
-      let {
-        data: { data, count }
-      } = await debounceFetchProducts(params)
+      let {data: {data, count}} = await debounceFetchProducts(params)
 
       dispatch(successFetchingProducts({ data, count }))
     } catch (error) {
@@ -91,6 +89,13 @@ export const setTag = (tags) => {
     type: SET_TAGS,
     tags
   }
+}
+
+export const toggleTag = tag => {
+ return {
+ type: TOGGLE_TAG,
+ tag
+ };
 }
 
 export const goToNextPage = () => {

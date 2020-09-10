@@ -1,10 +1,25 @@
 import React, { useEffect } from 'react'
-import { SideNav, LayoutSidebar, Responsive, CardProduct } from 'upkit'
+import {
+  SideNav,
+  LayoutSidebar,
+  Responsive,
+  CardProduct,
+  Pagination,
+  InputText
+} from 'upkit'
 import menus from './menus'
 import TopBar from '../../components/TopBar'
 import { config } from '../../config'
 import { useDispatch, useSelector } from 'react-redux'
-import { fetchProducts } from '../../features/Products/actions'
+import {
+  fetchProducts,
+  setPage,
+  goToNextPage,
+  goToPrevPage,
+  setKeyword,
+  setCategory
+} from '../../features/Products/actions'
+import BounceLoader from 'react-spinners/BounceLoader'
 
 const Home = () => {
   //state dari redux store
@@ -13,16 +28,40 @@ const Home = () => {
 
   useEffect(() => {
     dispatch(fetchProducts())
-  }, [dispatch])
+  }, [dispatch, products.currentPage, products.keyword, products.category])
 
   return (
     <div>
       <LayoutSidebar
-        sidebar={<SideNav items={menus} verticalAlign="top" />}
+        sidebar={
+          <SideNav
+            items={menus}
+            verticalAlign="top"
+            active={products.category}
+            onChange={(category) => dispatch(setCategory(category))}
+          />
+        }
         content={
           <div className="md:flex w-full mr-5 h-full min-hscreen">
             <div className="w-full md:w-3/4 pl-5 pb-10">
               <TopBar />
+
+              <InputText
+                value={products.keyword}
+                fullRound
+                fitContainer
+                placeholder="Cari makanan favoritmu..."
+                onChange={(e) => dispatch(setKeyword(e.target.value))}
+              />
+
+              {products.status === 'process' && !products.data.length ? (
+                <div
+                  className="flex justify-center items-center "
+                  style={{ height: 450 }}
+                >
+                  <BounceLoader color="red" />
+                </div>
+              ) : null}
               <Responsive desktop={3} items="stretch">
                 {products.data.map((product, index) => {
                   return (
@@ -37,6 +76,16 @@ const Home = () => {
                   )
                 })}
               </Responsive>
+              <div className="text-center my-10">
+                <Pagination
+                  totalItems={products.totalItems}
+                  page={products.currentPage}
+                  perPage={products.perPage}
+                  onChange={(page) => dispatch(setPage(page))}
+                  onNext={(_) => dispatch(goToNextPage())}
+                  onPrev={(_) => dispatch(goToPrevPage())}
+                />
+              </div>
             </div>
             <div
               className="w-full md:w-1/4 h-full shadow-lg border-r

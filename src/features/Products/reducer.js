@@ -44,6 +44,14 @@ function reducer(state = initialState, action) {
       }
     case SET_PAGE:
       return { ...state, currentPage: action.currentPage }
+    case NEXT_PAGE:
+      return { ...state, currentPage: state.currentPage + 1 }
+    case PREV_PAGE:
+      return {
+        ...state,
+        currentPage: state.currentPage - 1
+      }
+
     case SET_KEYWORD:
       return { ...state, keyword: action.keyword, tag: [], category: '' }
     case SET_CATEGORY:
@@ -62,13 +70,6 @@ function reducer(state = initialState, action) {
           currentPage: 1,
           tags: state.tags.filter((tag) => tag !== action.tags)
         }
-      }
-    case NEXT_PAGE:
-      return { ...state, currentPage: state.currentPage + 1 }
-    case PREV_PAGE:
-      return {
-        ...state,
-        currentPage: state.currentPage - 1
       }
 
     default:
