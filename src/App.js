@@ -9,17 +9,18 @@ import { listen } from './app/listener'
 import Register from './pages/Register'
 import Login from './pages/Login'
 import RegisterSuccess from './pages/RegisterSuccess'
-
+import { getDataCart } from './api/cart'
 function App() {
   useEffect(() => {
     listen()
+   getDataCart()
   }, [])
 
   return (
     <Provider store={store}>
       <Router>
         <Switch>
-        <Route path="/login" component={Login} />
+          <Route path="/login" component={Login} />
           <Route path="/register" exact component={Register} />
           <Route path="/register/berhasil" component={RegisterSuccess} />
 

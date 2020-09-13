@@ -11,7 +11,7 @@ export async function login(email, password) {
 
 export async function logout() {
   let { token } = localStorage.getItem('auth')
-    ? JSON.parser(localStorage.getItem('auth'))
+    ? JSON.parse(localStorage.getItem('auth'))
     : {}
 
   return await axios
@@ -20,6 +20,5 @@ export async function logout() {
     })
     .then((response) => {
       localStorage.removeItem('auth')
-      console.log('Gabut', response)
     })
 }

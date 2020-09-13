@@ -1,34 +1,48 @@
-import React, { useEffect } from 'react'
+import * as React from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import {
   SideNav,
   LayoutSidebar,
   Responsive,
   CardProduct,
   Pagination,
-  InputText
+  InputText,
+  Pill
 } from 'upkit'
-import menus from './menus'
+import BounceLoader from 'react-spinners/BounceLoader'
+import { useHistory } from 'react-router-dom'
+
 import TopBar from '../../components/TopBar'
+import menus from './menus'
 import { config } from '../../config'
-import { useDispatch, useSelector } from 'react-redux'
 import {
   fetchProducts,
   setPage,
   goToNextPage,
   goToPrevPage,
   setKeyword,
-  setCategory
+  setCategory,
+  toggleTag
 } from '../../features/Products/actions'
-import BounceLoader from 'react-spinners/BounceLoader'
+import Cart from '../../components/Cart'
+import { tags } from './tags'
+import { addItem, removeItem } from '../../features/Cart/actions'
 
-const Home = () => {
-  //state dari redux store
-  let products = useSelector((state) => state.products)
+export default function Home() {
   let dispatch = useDispatch()
+  let products = useSelector((state) => state.products)
+  let cart = useSelector((state) => state.cart)
+  let history = useHistory()
 
-  useEffect(() => {
+  React.useEffect(() => {
     dispatch(fetchProducts())
-  }, [dispatch, products.currentPage, products.keyword, products.category])
+  }, [
+    dispatch,
+    products.currentPage,
+    products.keyword,
+    products.category,
+    products.tags
+  ])
 
   return (
     <div>
@@ -42,26 +56,43 @@ const Home = () => {
           />
         }
         content={
-          <div className="md:flex w-full mr-5 h-full min-hscreen">
+          <div className="md:flex md:flex-row-reverse w-full mr-5 h-full min-h-screen">
             <div className="w-full md:w-3/4 pl-5 pb-10">
               <TopBar />
 
-              <InputText
-                value={products.keyword}
-                fullRound
-                fitContainer
-                placeholder="Cari makanan favoritmu..."
-                onChange={(e) => dispatch(setKeyword(e.target.value))}
-              />
+              <div className="w-full text-center mb-10 mt-5">
+                <InputText
+                  fullRound
+                  value={products.keyword}
+                  placeholder="cari makanan favoritmu..."
+                  fitContainer
+                  onChange={(e) => {
+                    dispatch(setKeyword(e.target.value))
+                  }}
+                />
+              </div>
+
+              <div className="mb-5 pl-2 flex w-3/3 overflow-auto pb-5">
+                {tags[products.category].map((tag, index) => {
+                  return (
+                    <div key={index}>
+                      <Pill
+                        text={tag}
+                        icon={tag.slice(0, 1).toUpperCase()}
+                        isActive={products.tags.includes(tag)}
+                        onClick={(_) => dispatch(toggleTag(tag))}
+                      />
+                    </div>
+                  )
+                })}
+              </div>
 
               {products.status === 'process' && !products.data.length ? (
-                <div
-                  className="flex justify-center items-center "
-                  style={{ height: 450 }}
-                >
+                <div className="flex justify-center">
                   <BounceLoader color="red" />
                 </div>
               ) : null}
+
               <Responsive desktop={3} items="stretch">
                 {products.data.map((product, index) => {
                   return (
@@ -70,12 +101,13 @@ const Home = () => {
                         title={product.name}
                         imgUrl={`${config.api_host}/upload/${product.image_url}`}
                         price={product.price}
-                        onAddToCart={(_) => null}
+                        onAddToCart={(_) => dispatch(addItem(product))}
                       />
                     </div>
                   )
                 })}
               </Responsive>
+
               <div className="text-center my-10">
                 <Pagination
                   totalItems={products.totalItems}
@@ -87,11 +119,14 @@ const Home = () => {
                 />
               </div>
             </div>
-            <div
-              className="w-full md:w-1/4 h-full shadow-lg border-r
-border-white bg-gray-100"
-            >
-              Keranjang belanja di sini
+
+            <div className="w-full md:w-1/4 h-full shadow-lg border-r border-white bg-gray-100">
+              <Cart
+                items={cart}
+                onItemInc={(item) => dispatch(addItem(item))}
+                onItemDec={(item) => dispatch(removeItem(item))}
+                onCheckout={(_) => history.push('/checkout')}
+              />
             </div>
           </div>
         }
@@ -100,5 +135,3 @@ border-white bg-gray-100"
     </div>
   )
 }
-
-export default Home

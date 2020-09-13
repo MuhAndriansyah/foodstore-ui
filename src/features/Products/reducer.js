@@ -9,72 +9,68 @@ import {
   NEXT_PAGE,
   PREV_PAGE,
   TOGGLE_TAG
-} from './constants'
+} from './constants';
 
 const statuslist = {
   idle: 'idle',
   process: 'process',
   success: 'success',
-  error: 'error'
+  error: 'error',
 }
 
 const initialState = {
-  data: [], //untuk menyimpan item / produk dari server
-  currentPage: 1, //untuk menyimpan halaman aktif, default 1
-  totalItems: -1, //total item/produk
-  perPage: 6, // jumlah item untuk menyimpan halaman
-  keyword: '', // untuk memfilter berdasarkan nama produk
-  category: '', // kategori produk yang sedang aktif
-  tags: [], // tags produk yang sedang aktif
-  status: statuslist.idle //status request data produk ke server
-}
+  data: [],
+  currentPage: 1,
+  totalItems: -1,
+  perPage: 6,
+  keyword: '',
+  category: '',
+  tags: [],
+  status: statuslist.idle
+};
 
-function reducer(state = initialState, action) {
-  switch (action.type) {
+export default function reducer(state = initialState, action){
+
+  switch(action.type){
+
     case START_FETCHING_PRODUCT:
-      return { ...state, status: statuslist.process }
-    case ERROR_FETCHING_PRODUCT:
-      return { ...state, status: statuslist.error }
+      return {...state, status: statuslist.process, data: []}
+
     case SUCCESS_FETCHING_PRODUCT:
-      return {
-        ...state,
-        status: statuslist.success,
-        data: action.data,
-        totalItems: action.count
-      }
+      return {...state, data: action.data, totalItems: action.count, status: statuslist.success}
+
+    case ERROR_FETCHING_PRODUCT:
+      return {...state, status: statuslist.error}
+
     case SET_PAGE:
-      return { ...state, currentPage: action.currentPage }
+      return {...state, currentPage: action.currentPage}
+
     case NEXT_PAGE:
-      return { ...state, currentPage: state.currentPage + 1 }
+      return {...state, currentPage: state.currentPage + 1}
+
     case PREV_PAGE:
-      return {
-        ...state,
-        currentPage: state.currentPage - 1
-      }
+      return {...state, currentPage: state.currentPage - 1}
 
     case SET_KEYWORD:
-      return { ...state, keyword: action.keyword, tag: [], category: '' }
+      return {...state, keyword: action.keyword, category: '', tags: []}
+
     case SET_CATEGORY:
-      return { ...state, category: action.category, keyword: '', tag: [] }
+      return {...state, currentPage: 1, tags: [], category: action.category, keyword: ''}
+
     case SET_TAGS:
-      return {
-        ...state,
-        tags: action.tags
-      }
+      return {...state, tags: action.tags}
+
     case TOGGLE_TAG:
-      if (!state.tags.includes(action.tag)) {
-        return { ...state, currentPage: 1, tags: [...state.tags, action.tag] }
+      if(!state.tags.includes(action.tag)){
+        return {...state, currentPage: 1, tags: [...state.tags, action.tag]}
       } else {
-        return {
-          ...state,
-          currentPage: 1,
-          tags: state.tags.filter((tag) => tag !== action.tags)
-        }
+        return {...state, currentPage: 1, tags: state.tags.filter(tag => tag !== action.tag)}
       }
+
+
 
     default:
-      return state
+      return state;
+
   }
 }
-
-export default reducer

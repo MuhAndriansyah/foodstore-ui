@@ -1,20 +1,36 @@
-import store from './store'
+import store from './store';
 
-let currentAuth
-console.log('Listener', currentAuth)
-function listener() {
-  const previousAuth = currentAuth
-  currentAuth = store.getState().auth
+import {saveCart} from '../api/cart';
 
-  if (previousAuth !== currentAuth) {
-    localStorage.setItem('auth', JSON.stringify(currentAuth))
+let currentAuth;
+let currentCart;
+
+function listener(){
+
+  let previousAuth = currentAuth;
+  let previousCart = currentCart;
+
+  currentAuth = store.getState().auth;
+  currentCart = store.getState().cart;
+
+  let { token } = currentAuth;
+
+  if(currentAuth !== previousAuth){
+    localStorage.setItem('auth', JSON.stringify(currentAuth));
+    saveCart(token, currentCart);
   }
+
+  if(currentCart !== previousCart){
+    localStorage.setItem('cart', JSON.stringify(currentCart));
+    saveCart(token, currentCart);
+  }
+
 }
 
-function listen() {
-  // dengarkarn perubahan state
-  // fungsi store.subscribe untuk mendaftarkan fungsi listener
-  store.subscribe(listener)
+function listen(){
+
+  store.subscribe(listener);
+
 }
 
 export { listen }

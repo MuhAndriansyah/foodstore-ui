@@ -7,7 +7,7 @@ import { FaUser } from 'react-icons/fa'
 
 function TopBar() {
   const auth = useSelector((state) => state.auth)
-  console.log('User', auth.user.full_name)
+
   return (
     <Responsive desktop={2} justify="between" items="center">
       <div>
