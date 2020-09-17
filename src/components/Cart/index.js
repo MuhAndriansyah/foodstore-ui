@@ -30,9 +30,9 @@ function Cart({ items, onItemInc, onItemDec, onCheckout }) {
         </div>
       ) : null}
       <div className="p-2">
-        {items.map((item, index) => {
+        {items.map((item) => {
           return (
-            <div key={index} className="mb-2">
+            <div key={item._id} className="mb-2">
               <CardItem
                 imgUrl={`${config.api_host}/upload/${item.image_url}`}
                 name={item.name}

@@ -10,10 +10,12 @@ import Register from './pages/Register'
 import Login from './pages/Login'
 import RegisterSuccess from './pages/RegisterSuccess'
 import { getDataCart } from './api/cart'
+import UserAddressAdd from './pages/UserAddressAdd'
+import UserAddress from './pages/UserAddress'
 function App() {
   useEffect(() => {
     listen()
-   getDataCart()
+    getDataCart()
   }, [])
 
   return (
@@ -23,7 +25,8 @@ function App() {
           <Route path="/login" component={Login} />
           <Route path="/register" exact component={Register} />
           <Route path="/register/berhasil" component={RegisterSuccess} />
-
+          <Route path="/alamat-pengiriman/tambah" component={UserAddressAdd} />
+          <Route path="/alamat-pengiriman" component={UserAddress} />
           <Route path="/" exact component={Home} />
         </Switch>
       </Router>
