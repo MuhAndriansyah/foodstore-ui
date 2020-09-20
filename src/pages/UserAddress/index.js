@@ -1,9 +1,9 @@
-import React from 'react'
+import * as React from 'react'
+import { LayoutOne, Text, Table, Button } from 'upkit'
+import { Link } from 'react-router-dom'
 
 import TopBar from '../../components/TopBar'
 import { useAddressData } from '../../hooks/address'
-import { LayoutOne, Text, Table, Button } from 'upkit'
-import { Link } from 'react-router-dom'
 
 const columns = [
   { Header: 'Nama', accessor: 'nama' },
@@ -12,53 +12,51 @@ const columns = [
     accessor: (alamat) => {
       return (
         <div>
+          {alamat.provinsi}, {alamat.kabupaten}, {alamat.kecamatan},{' '}
+          {alamat.kelurahan} <br />
           {alamat.detail}
-          <br />
-          {alamat.provinsi}, {alamat.kabupaten},{alamat.kecamatan},{' '}
-          {alamat.kelurahan}
         </div>
       )
     }
   }
 ]
 
-function UserAddress() {
-  let { data, page, count, status, limit, setPage } = useAddressData()
+export default function UserAddress() {
+  let { data, limit, page, status, count, setPage } = useAddressData()
 
   return (
     <LayoutOne size="large">
       <div>
         <TopBar />
-        <Text as="h3">Alamat Pengiriman</Text>
+        <Text as="h3"> Alamat pengiriman </Text>
         <br />
 
-        <div className="mb-3 text-right">
-          <Link to="/alamat-pengiriman/tambah">
-            <Button color="green">Tambah Baru</Button>
+        <div>
+          <Link to="alamat-pengiriman/tambah">
+            <Button>Tambah baru</Button>
           </Link>
+          <br />
+          <br />
+          <Table
+            items={data}
+            columns={columns}
+            totalItems={count}
+            page={page}
+            perPage={limit}
+            isLoading={status === 'process'}
+            onPageChange={(page) => setPage(page)}
+          />
         </div>
 
-        <br />
-        <Table
-          items={data}
-          columns={columns}
-          totalItems={count}
-          page={page}
-          isLoading={status === 'process'}
-          perPage={limit}
-          onPageChange={(page) => setPage(page)}
-        />
+        {status === 'success' && !data.length ? (
+          <div className="text-center p-10">
+            Kamu belum menambahkan alamat pengiriman. <br />
+            <Link to="/alamat-pengiriman/tambah">
+              <Button> Tambah Baru </Button>
+            </Link>
+          </div>
+        ) : null}
       </div>
-      {status === 'success' && !data.length ? (
-        <div className="text-center p10">
-          Kamu belum menambahkan alamat pengiriman. <br />
-          <Link to="/alamat-pengiriman/tambah">
-            <Button> Tambah Baru </Button>
-          </Link>
-        </div>
-      ) : null}
     </LayoutOne>
   )
 }
-
-export default UserAddress

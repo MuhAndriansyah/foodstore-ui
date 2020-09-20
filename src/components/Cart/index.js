@@ -25,8 +25,7 @@ function Cart({ items, onItemInc, onItemDec, onCheckout }) {
       </div>
       {!items.length ? (
         <div className="text-center text-sm text-red900">
-          {' '}
-          belum ada items di keranjang{' '}
+          belum ada items di keranjang
         </div>
       ) : null}
       <div className="p-2">
@@ -49,7 +48,7 @@ function Cart({ items, onItemInc, onItemDec, onCheckout }) {
   )
 }
 
-Cart.prototype = {
+Cart.propTypes = {
   items: arrayOf(
     shape({
       _id: string.isRequired,
